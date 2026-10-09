@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "vkEduProject"
 include(":app")
+ 
