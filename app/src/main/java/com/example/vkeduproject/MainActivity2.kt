@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,16 +30,20 @@ import com.example.vkeduproject.ui.theme.VkEduProjectTheme
 class MainActivity2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val receivedText = intent.getStringExtra("EXTRA_TEXT") ?: "Текст не найден"
         enableEdgeToEdge()
         setContent {
-            VkEduProjectTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting2(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            Box(contentAlignment = Alignment.Center) {
+                Text(text = "Вы ввели: $receivedText")
             }
+            //VkEduProjectTheme {
+            //    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            //        Greeting2(
+            //            name = "Android",
+            //            modifier = Modifier.padding(innerPadding)
+            //        )
+            //    }
+            //}
         }
     }
 }
