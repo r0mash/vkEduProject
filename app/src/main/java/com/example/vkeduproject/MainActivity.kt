@@ -1,7 +1,7 @@
 package com.example.vkeduproject
 
 import android.content.Intent
-import android.net.Uri
+//import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.vkeduproject.ui.theme.VkEduProjectTheme
 import kotlin.jvm.java
+import androidx.core.net.toUri
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,15 +48,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
     var text by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
     Column(modifier = Modifier.padding(16.dp)) {
@@ -80,20 +72,40 @@ fun GreetingPreview() {
         }
         //Вторая кнопка
         Button(onClick = {
-            // Простейшая валидация: удаляем пробелы и проверяем, что остались только цифры или плюсик
             val phone = text.trim()
             if (phone.isNotEmpty()) {
-                // ACTION_DIAL просто набирает номер, но не звонит сам (это безопасно)
-                val intent = Intent(Intent.ACTION_DIAL)
-                // Формат uri должен быть именно "tel:номер"
-                intent.data = Uri.parse("tel:$phone")
-
+                val intent = Intent(Intent.ACTION_DIAL).apply{data = "tel:$phone".toUri()}
                 context.startActivity(intent)
             }
         }) {
             Text("Позвонить другу")
         }
+        //Кнопка 3 (системный)
+        Button(onClick = {
+            if (text.isNotBlank()) {
+                // ACTION_SEND говорит системе, что мы хотим что-то отправить
+                val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                    putExtra(Intent.EXTRA_TEXT, text)
+                    type = "text/plain" // Указываем, что отправляем обычный текст
+                }
+
+                // createChooser принудительно вызывает красивое нижнее меню выбора приложений
+                val shareIntent = Intent.createChooser(sendIntent, "Куда отправить?")
+                context.startActivity(shareIntent)
+            }
+        }) {
+            Text("Поделиться текстом")
+        }
     }
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
     //Text(
     //    text = "Hello $name!",
     //    modifier = modifier
