@@ -1,6 +1,7 @@
 package com.example.vkeduproject
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -67,6 +68,7 @@ fun GreetingPreview() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         //Кнопки
+        //Первая
         Button(onClick = {
             if (text.isNotBlank()) {
                 val intent = Intent(context, MainActivity2::class.java)
@@ -75,6 +77,21 @@ fun GreetingPreview() {
             }
         }) {
             Text("Открыть вторую Activity")
+        }
+        //Вторая кнопка
+        Button(onClick = {
+            // Простейшая валидация: удаляем пробелы и проверяем, что остались только цифры или плюсик
+            val phone = text.trim()
+            if (phone.isNotEmpty()) {
+                // ACTION_DIAL просто набирает номер, но не звонит сам (это безопасно)
+                val intent = Intent(Intent.ACTION_DIAL)
+                // Формат uri должен быть именно "tel:номер"
+                intent.data = Uri.parse("tel:$phone")
+
+                context.startActivity(intent)
+            }
+        }) {
+            Text("Позвонить другу")
         }
     }
     //Text(
